@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Juego de Burbujas</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #e0f7fa;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+        }
+        .bubble {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: blue;
+            opacity: 0.7;
+            animation: float 4s infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100vh); }
+        }
+        #score {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+        #timer {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 24px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div id="score">Puntuación: 0</div>
+    <div id="timer">Tiempo: 30</div>
+
+    <script>
+        let score = 0;
+        let timeLeft = 30;
+        let bubbleInterval;
+
+        const scoreDiv = document.getElementById('score');
+        const timerDiv = document.getElementById('timer');
+
+        function startGame() {
+            bubbleInterval = setInterval(generateBubble, 1000);
+            const countdown = setInterval(() => {
+                timeLeft--;
+                timerDiv.textContent = `Tiempo: ${timeLeft}`;
+                if (timeLeft <= 0) {
+                    clearInterval(countdown);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function generateBubble() {
+            const bubble = document.createElement('div');
+            bubble.className = 'bubble';
+            bubble.style.left = Math.random() * window.innerWidth + 'px';
+            document.body.appendChild(bubble);
+
+            bubble.addEventListener('click', function() {
+                explodeBubble(bubble);
+            });
+
+            setTimeout(() => {
+                bubble.remove();
+            }, 4000); // Eliminar burbuja si no se toca
+        }
+
+        function explodeBubble(bubble) {
+            score++;
+            scoreDiv.textContent = `Puntuación: ${score}`;
+            bubble.remove(); // Eliminar burbuja
+        }
+
+        function endGame() {
+            clearInterval(bubbleInterval);
+            alert(`Juego terminado. Puntaje: ${score}`);
+        }
+
+        startGame();
+    </script>
+</body>
+</html>
